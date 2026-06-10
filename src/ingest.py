@@ -1,41 +1,39 @@
-import os
 import pandas as pd
+import os
 
-# Define paths safely
-input_path = "data/raw/polyhouse_sensors.csv"
-interim_dir = "data/interim"
-processed_dir = "data/processed"
-
-# Output target paths
-csv_output_path = os.path.join(interim_dir, "01_loaded.csv")
-parquet_output_path = os.path.join(processed_dir, "02_cleaned.parquet")
-
-print("--- Starting Data Ingestion & Cleaning Pipeline ---")
-
-if os.path.exists(input_path):
-    # Load and clean the fresh data 
-    df = pd.read_csv(input_path)
+def load_to_interim_pipeline():
+    print("=== STARTING TASK 1: INGESTION PIPELINE ===")
     
-    # Standardize column casing dynamically to avoid key errors
-    df.columns = [col.strip().capitalize() for col in df.columns]
+    # Define our source and destination paths
+    raw_path = "data/raw/polyhouse_sensors.csv"
+    interim_dir = "data/interim"
+    processed_dir = "data/processed"
     
-    # Ensure Timestamp parsing is robust
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
-    
-    # Print operational statistics to terminal
-    print(f"\n[INFO] Shape of dataset: {df.shape}")
-    print("\n[INFO] Data Columns & Extracted Types:")
-    print(df.dtypes)
-    
-    # Fulfill Task 2: Save the raw csv checkpoint to data/interim/
+    # Make sure the target folders exist
     os.makedirs(interim_dir, exist_ok=True)
-    df.to_csv(csv_output_path, index=False)
-    print(f"\n[SUCCESS] Interim backup saved to: {csv_output_path}")
-    
-    # Fulfill Task 2: Save the clean structural file to data/processed/*.parquet
     os.makedirs(processed_dir, exist_ok=True)
-    df.to_parquet(parquet_output_path, index=False)
-    print(f"[SUCCESS] Task 2 Cleansed file saved to Parquet format at: {parquet_output_path}")
+    
+    try:
+        # 1. READ FROM RAW
+        df = pd.read_csv(raw_path)
+        print(f"SUCCESS: Read raw file with {len(df)} rows.")
+        
+        # 2. LOAD TO INTERIM (Save a raw copy to interim folder as requested)
+        interim_path = f"{interim_dir}/01_loaded.csv"
+        df.to_csv(interim_path, index=False)
+        print(f"SUCCESS: Loaded and saved raw copy to interim: '{interim_path}'")
+        
+        # 3. CLEAN & SAVE TO PROCESSED
+        # Ensure column headers are neat and lowercase
+        df.columns = df.columns.str.strip().str.lower()
+        
+        processed_path = f"{processed_dir}/02_cleaned.parquet"
+        df.to_parquet(processed_path, index=False)
+        print(f"SUCCESS: Cleaned data saved to processed: '{processed_path}'")
+        print("=== INGESTION TASK COMPLETE ===")
+        
+    except Exception as e:
+        print("=== INGESTION TASK FAILED ===")
+        print(f"Error during ingestion execution: {e}")
 
-else:
-    print(f"[ERROR] Source file missing at: {input_path}. Double-check your data directory structure.")
+    load_to_interim_pipeline()
