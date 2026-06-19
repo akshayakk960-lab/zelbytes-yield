@@ -23,5 +23,4 @@ def run_column_smoke_test():
     except Exception as e:
         print("=== SMOKE TEST: FAILED ===")
         print(f"Validation failed. Please check your dataset columns or file path. Error: {e}")
-
 run_column_smoke_test()

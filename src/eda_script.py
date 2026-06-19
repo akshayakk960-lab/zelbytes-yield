@@ -7,6 +7,22 @@ df = pd.read_csv("data/raw/polyhouse_sensors.csv")
 # Remove missing values
 df = df.dropna()
 
+# ========================================================
+# NEW: Calculate and Display Specific Metrics
+# ========================================================
+mean_temp = df["temperature_c"].mean()
+median_humidity = df["humidity_pct"].median()
+max_yield = df["yield_kg"].max()
+min_co2 = df["co2_ppm"].min()
+
+print("--- Calculated Metrics ---")
+print(f"Mean Temperature:  {mean_temp:.2f} °C")
+print(f"Median Humidity:   {median_humidity:.2f} %")
+print(f"Maximum Yield:     {max_yield:.2f} kg")
+print(f"Minimum CO2:       {min_co2:.2f} ppm")
+print("-" * 26)
+# ========================================================
+
 # Create 3 scatter plots
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
