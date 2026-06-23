@@ -65,3 +65,8 @@ To prevent production degradation due to seasonal variations or sensor degradati
 Task 9 has been successfully finalized. The model is fully integrated into a stable public web infrastructure, ensuring instant prediction deliveries. 
 
 Future iterations will look to integrate automated IoT hardware webhooks to feed data straight into the inference endpoint without manual user slider inputs, closing the loop on a fully automated smart-farming facility.
+## 10. Engineering Reflection
+Building this end-to-end MLOps pipeline provided invaluable hands-on experience balancing model predictive power with operational deployment guardrails. Navigating data transformations without introducing future leakage during temporal cross-validation highlighted the nuances of production-grade time-series engineering. Transitioning the system from a localized development container to a live cloud architecture running on Streamlit Community Cloud made the abstract concepts of continuous integration and monitoring tangible, laying a rock-solid foundation for future edge IoT automation systems.
+
+## 11. Live Application Preview
+![Streamlit Production UI Dashboard](../app_demo.png)
